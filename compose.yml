@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: infra/dev/app/Dockerfile
     container_name: go_server
+    depends_on:
+      - db
     volumes:
       - ./src:/E-Commerce-Chat-Microservice
       - /go/pkg/mod
@@ -12,6 +14,29 @@ services:
     tty: true
     networks:
       - artsa2-network
+
+  db:
+    build:
+      dockerfile: infra/dev/db/Dockerfile
+    platform: linux/amd64
+    environment:
+      TZ: Asia/Tokyo
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 30s
+      retries: 10
+    volumes:
+      - ./src/db/mysql_data:/var/lib/mysql
+    networks:
+      - artsa2-network
+
+volumes:
+  db-data:
 
 networks:
   artsa2-network:
