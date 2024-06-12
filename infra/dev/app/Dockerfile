@@ -19,7 +19,3 @@ COPY ./src .
 
 # 依存関係のチェックを含むビルドステップを追加
 RUN go build -o /dev/null ./...
-
-# コンテナ起動時にbashを実行
-# CMD ["go", "run", "main.go"]
-
