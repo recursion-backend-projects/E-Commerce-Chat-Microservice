@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  go-app:
+    build:
+      context: .
+      dockerfile: infra/dev/app/Dockerfile
+    container_name: go_app
+    volumes:
+      - ./src:/E-Commerce-Chat-Microservice
+      - /go/pkg/mod
+    ports:
+      - "8080:8080"
+    tty: true
+    environment:
+      - GO111MODULE=on
