@@ -1,9 +1,9 @@
 services:
-  go-app:
+  go-server:
     build:
       context: .
       dockerfile: infra/dev/app/Dockerfile
-    container_name: go_app
+    container_name: go_server
     volumes:
       - ./src:/E-Commerce-Chat-Microservice
       - /go/pkg/mod
