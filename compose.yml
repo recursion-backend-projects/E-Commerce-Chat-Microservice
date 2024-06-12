@@ -12,5 +12,3 @@ services:
     ports:
       - "8080:8080"
     tty: true
-    environment:
-      - GO111MODULE=on
