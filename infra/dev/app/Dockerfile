@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y bash
 COPY ./src/go.mod ./src/go.sum ./
 
 # 依存関係をダウンロードして go.sum を更新
+RUN go mod tidy
 RUN go mod download
 
 # アプリケーションのソースコードをコピー
@@ -20,5 +21,5 @@ COPY ./src .
 RUN go build -o /dev/null ./...
 
 # コンテナ起動時にbashを実行
-CMD ["/bin/bash"]
+# CMD ["go", "run", "main.go"]
 
