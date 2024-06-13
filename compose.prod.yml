@@ -1,0 +1,26 @@
+services:
+  go-server:
+    build:
+      context: .
+      dockerfile: infra/dev/app/Dockerfile
+    container_name: go_server
+    volumes:
+      - ./src:/E-Commerce-Chat-Microservice
+      - /go/pkg/mod
+    ports:
+      - "8080:8080"
+    tty: true
+
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAINS: "chat.art-sa2.com -> http://go_server:8080"
+      STAGE: "production"
+    volumes:
+      - https-portal-data:/var/lib/https-portal
+
+volumes:
+  https-portal-data:
