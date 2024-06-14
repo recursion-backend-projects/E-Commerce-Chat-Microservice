@@ -77,51 +77,51 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-1
 
-  #     - name: Deploy to Production
-  #       run: |
-  #         # SSHのセキュリティグループを開放する
-  #         aws ec2 authorize-security-group-ingress --group-id ${{ secrets.PROD_EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+      - name: Deploy to Production
+        run: |
+          # SSHのセキュリティグループを開放する
+          aws ec2 authorize-security-group-ingress --group-id ${{ secrets.PROD_EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
 
-  #         # SSH接続
-  #         echo "${{ secrets.PROD_PRIVATE_KEY }}" > private_key
-  #         chmod 600 private_key
+          # SSH接続
+          echo "${{ secrets.PROD_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
 
-  #         ssh -oStrictHostKeyChecking=no ${{ secrets.PROD_USER_NAME }}@${{ secrets.PROD_HOST_NAME }} -i private_key << 'EOF'
-  #           if [ -d ~/web/E-Commerce-Chat-Microservice ]; then
-  #             cd ~/web/E-Commerce-Chat-Microservice
+          ssh -oStrictHostKeyChecking=no ${{ secrets.PROD_USER_NAME }}@${{ secrets.PROD_HOST_NAME }} -i private_key << 'EOF'
+            if [ -d ~/web/E-Commerce-Chat-Microservice ]; then
+              cd ~/web/E-Commerce-Chat-Microservice
 
-  #             # 起動中のコンテナを停止させる
-  #             sudo docker stop $(sudo docker ps -q)
-  #             sudo docker compose down
+              # 起動中のコンテナを停止させる
+              sudo docker stop $(sudo docker ps -q)
+              sudo docker compose down
 
-  #             # 未使用のイメージ、コンテナ、ネットワークを削除
-  #             sudo docker system prune -af
-  #             # 未使用のボリュームを削除(ただし、再署名を避けるため、src_https_portalは削除しない)
-  #             sudo chmod +x ./bin/cleanup_volumes.sh
-  #             sudo ./bin/cleanup_volumes.sh
+              # 未使用のイメージ、コンテナ、ネットワークを削除
+              sudo docker system prune -af
+              # 未使用のボリュームを削除(ただし、再署名を避けるため、src_https_portalは削除しない)
+              sudo chmod +x ./bin/cleanup_volumes.sh
+              sudo ./bin/cleanup_volumes.sh
 
-  #             # 既存のリポジトリフォルダを削除
-  #             sudo rm -rf ~/web/E-Commerce-Chat-Microservice
-  #           fi
+              # 既存のリポジトリフォルダを削除
+              sudo rm -rf ~/web/E-Commerce-Chat-Microservice
+            fi
 
-  #           # GitHubから新たにリポジトリをクローン
-  #           cd ~/web
-  #           git clone --branch ${{ github.ref_name }} git@github.com:recursion-backend-projects/E-Commerce-Chat-Microservice.git
+            # GitHubから新たにリポジトリをクローン
+            cd ~/web
+            git clone --branch ${{ github.ref_name }} git@github.com:recursion-backend-projects/E-Commerce-Chat-Microservice.git
 
-  #           cd ./E-Commerce-Chat-Microservice
+            cd ./E-Commerce-Chat-Microservice
 
-  #           # 環境ファイルを作成する
-  #           touch .env
-  #           echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
-  #           echo "PROD_RDS_USERNAME=${{ secrets.PROD_RDS_USERNAME }}" >> .env
-  #           echo "PROD_RDS_PASSWORD=${{ secrets.PROD_RDS_PASSWORD }}" >> .env
-  #           echo "PROD_RDS_HOSTNAME=${{ secrets.PROD_RDS_HOSTNAME }}" >> .env
-  #           echo "PROD_RDS_DB_NAME=${{ secrets.PROD_RDS_DB_NAME }}" >> .env
+            # 環境ファイルを作成する
+            touch .env
+            echo "MYSQL_DATABASE=${{ secrets.MYSQL_DATABASE }}" >> .env
+            echo "PROD_RDS_USERNAME=${{ secrets.PROD_RDS_USERNAME }}" >> .env
+            echo "PROD_RDS_PASSWORD=${{ secrets.PROD_RDS_PASSWORD }}" >> .env
+            echo "PROD_RDS_HOSTNAME=${{ secrets.PROD_RDS_HOSTNAME }}" >> .env
+            echo "PROD_RDS_DB_NAME=${{ secrets.PROD_RDS_DB_NAME }}" >> .env
 
-  #           # Docker Hubから最新のイメージをプルしてコンテナを起動する
-  #           sudo docker compose -f compose.prod.yml up -d --pull always
-  #         EOF
-  #         rm -f private_key
+            # Docker Hubから最新のイメージをプルしてコンテナを起動する
+            sudo docker compose -f compose.prod.yml up -d --pull always
+          EOF
+          rm -f private_key
 
-  #         # SSHのセキュリティグループを閉じる
-  #         aws ec2 revoke-security-group-ingress --group-id ${{ secrets.PROD_EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
+          # SSHのセキュリティグループを閉じる
+          aws ec2 revoke-security-group-ingress --group-id ${{ secrets.PROD_EC2_SECURITY_GROUP_ID }} --protocol tcp --port 22 --cidr ${{ steps.ip.outputs.ipv4 }}/32
