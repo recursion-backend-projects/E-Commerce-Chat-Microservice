@@ -44,7 +44,7 @@ jobs:
           tags: artsa2/art-sa2-chat:go-server-latest
           labels: ${{ steps.meta-go-server.outputs.labels }}
 
-  # 本番環境へのデプロイジョブ
+  # ステージング環境へのデプロイジョブ
   deploy-to-production:
     runs-on: ubuntu-22.04
     needs: build-and-push-docker-images
@@ -104,7 +104,7 @@ jobs:
 
             # GitHubから新たにリポジトリをクローン
             cd ~/web
-            git clone --branch ${{ github.ref_name }} git@github.com:recursion-backend-projects/E-Commerce-Chat-Microservice.git
+            git clone --branch ${{ github.head_ref }} git@github.com:recursion-backend-projects/E-Commerce-Chat-Microservice.git
 
             cd ./E-Commerce-Chat-Microservice
 
