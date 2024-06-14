@@ -26,8 +26,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKER_HUB_USERNAME_PROD }}
-          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN_PROD }}
+          username: ${{ secrets.PROD_DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.PROD_DOCKER_HUB_ACCESS_TOKEN }}
 
       # メタデータを設定してDockerイメージのタグとラベルを抽出
       - name: Extract metadata for App
