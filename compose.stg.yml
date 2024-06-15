@@ -17,7 +17,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      DOMAINS: "[ここを任意のドメインに設定してください] -> http://go_server:8080"
+      DOMAINS: "chat.art-sa2-stg.com -> http://go_server:8080"
       STAGE: "production"
     volumes:
       - https-portal-data:/var/lib/https-portal
