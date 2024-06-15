@@ -21,9 +21,16 @@ func goodbyeHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(response)
 }
 
+func yahooHandler(w http.ResponseWriter, r *http.Request) {
+    response := Response{Message: "yahoo!"}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
 func main() {
     http.HandleFunc("/", helloHandler)
     http.HandleFunc("/goodbye", goodbyeHandler)
+    http.HandleFunc("/yahoo", yahooHandler)
     http.ListenAndServe(":8080", nil)
 }
 
