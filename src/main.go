@@ -21,9 +21,15 @@ func goodbyeHandler(w http.ResponseWriter, r *http.Request) {
     json.NewEncoder(w).Encode(response)
 }
 
+func konichiwaHandler(w http.ResponseWriter, r *http.Request) {
+    response := Response{Message: "こんにちは、世界！"}
+    w.Header().Set("Content-Type", "application/json")
+    json.NewEncoder(w).Encode(response)
+}
+
 func main() {
     http.HandleFunc("/", helloHandler)
     http.HandleFunc("/goodbye", goodbyeHandler)
+    http.HandleFunc("/konichiwa", konichiwaHandler)
     http.ListenAndServe(":8080", nil)
 }
-
