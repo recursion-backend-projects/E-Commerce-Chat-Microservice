@@ -16,6 +16,6 @@ func main() {
 		log.Print("Error loading .env file")
 	}
 
-	http.HandleFunc("/chat", auth.Authenticate(websocket.Echo))
+	http.HandleFunc("/chat", auth.Authenticate(websocket.HandleChat))
 	http.ListenAndServe(os.Getenv("PORT"), nil)
 }

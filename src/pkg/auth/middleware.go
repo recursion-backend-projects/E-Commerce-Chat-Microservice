@@ -1,12 +1,17 @@
+// middleware.go
+
 package auth
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
 )
+
+type ClaimsKey struct{}
 
 func Authenticate(next http.HandlerFunc) http.HandlerFunc {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -33,6 +38,10 @@ func Authenticate(next http.HandlerFunc) http.HandlerFunc {
 			fmt.Printf("type: %v\n", claims["type"])
 			fmt.Printf("exp: %v\n", int64(claims["exp"].(float64)))
 		}
+
+		// クレームをコンテキストに格納
+		ctx := context.WithValue(r.Context(), ClaimsKey{}, token.Claims)
+		r = r.WithContext(ctx)
 
 		next.ServeHTTP(w, r)
 	})
