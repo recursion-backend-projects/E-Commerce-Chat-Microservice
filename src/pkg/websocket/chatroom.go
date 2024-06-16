@@ -20,7 +20,7 @@ type ChatRoom struct {
 
 // チャットルームを保持するハッシュテーブル
 var chatRooms = make(map[int64]*ChatRoom)
-var mu sync.Mutex // Protects chatRooms
+var mu sync.Mutex
 
 // チャットルームにクライアントを追加する
 func AddClient(client *Client, connectionType string) bool {
@@ -33,14 +33,19 @@ func AddClient(client *Client, connectionType string) bool {
 		chatRooms[client.customerID] = chatRoom
 		log.Printf("Created chat room for customer %d", client.customerID)
 		return true
-	} else if exists && connectionType == "join" {
-		if chatRoom.admin == nil && client.adminID != 0 {
-			chatRoom.admin = client
-			log.Printf("Admin %d joined chat room for customer %d", client.adminID, client.customerID)
+	} else if exists {
+		if connectionType == "create" {
+			chatRoom.customer = client
+			log.Printf("Customer %d reconnected to chat room", client.customerID)
 			return true
+		} else if connectionType == "join" {
+			if chatRoom.admin == nil && client.adminID != 0 {
+				chatRoom.admin = client
+				log.Printf("Admin %d joined chat room for customer %d", client.adminID, client.customerID)
+				return true
+			}
+			log.Printf("Admin %d is already connected to chat room for customer %d or invalid adminID", client.adminID, client.customerID)
 		}
-		log.Printf("Admin %d is already connected to chat room for customer %d or invalid adminID", client.adminID, client.customerID)
-		return false
 	}
 	return false
 }
@@ -51,21 +56,23 @@ func RemoveClient(client *Client, connectionType string) {
 	defer mu.Unlock()
 
 	chatRoom, exists := chatRooms[client.customerID]
-	if !exists {
-		return
-	}
+	if exists {
+		if connectionType == "create" {
+			chatRoom.customer = nil
+			log.Printf("Customer %d disconnected", client.customerID)
+		} else if connectionType == "join" {
+			chatRoom.admin = nil
+			log.Printf("Admin %d disconnected from chat room for customer %d", client.adminID, client.customerID)
+		}
 
-	if connectionType == "create" {
-		delete(chatRooms, client.customerID)
-		log.Printf("Deleted chat room for customer %d", client.customerID)
-	} else if connectionType == "join" {
-		chatRoom.admin = nil
-		if chatRoom.customer == nil {
+		// 両方のクライアントが切断された場合、チャットルームを削除
+		if chatRoom.customer == nil && chatRoom.admin == nil {
 			delete(chatRooms, client.customerID)
-			log.Printf("Deleted chat room for customer %d", client.customerID)
+			log.Printf("Chat room for customer %d deleted", client.customerID)
 		}
 	}
 }
+
 
 // チャットルーム内の他のクライアントにメッセージを中継する
 func RelayMessage(client *Client, messageType int, message []byte) {
@@ -78,9 +85,9 @@ func RelayMessage(client *Client, messageType int, message []byte) {
 	}
 
 	var targetConn *websocket.Conn
-	if client.adminID == 0 && chatRoom.admin != nil { // Customer sending message to admin
+	if client.adminID == 0 && chatRoom.admin != nil {
 		targetConn = chatRoom.admin.conn
-	} else if client.adminID != 0 && chatRoom.customer != nil { // Admin sending message to customer
+	} else if client.adminID != 0 && chatRoom.customer != nil {
 		targetConn = chatRoom.customer.conn
 	}
 
