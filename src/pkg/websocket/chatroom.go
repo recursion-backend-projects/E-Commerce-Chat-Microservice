@@ -64,12 +64,6 @@ func RemoveClient(client *Client, connectionType string) {
 			chatRoom.admin = nil
 			log.Printf("Admin %d disconnected from chat room for customer %d", client.adminID, client.customerID)
 		}
-
-		// 両方のクライアントが切断された場合、チャットルームを削除
-		if chatRoom.customer == nil && chatRoom.admin == nil {
-			delete(chatRooms, client.customerID)
-			log.Printf("Chat room for customer %d deleted", client.customerID)
-		}
 	}
 }
 
