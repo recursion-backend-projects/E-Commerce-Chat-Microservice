@@ -1,5 +1,5 @@
 services:
-  go-server:
+  go_server:
     build:
       context: .
       dockerfile: infra/prod/app/Dockerfile
