@@ -19,6 +19,7 @@ services:
     environment:
       DOMAINS: "chat.art-sa2.com -> http://go_server:8080"
       STAGE: "production"
+      WEBSOCKET: "true"
     volumes:
       - https-portal-data:/var/lib/https-portal
 
