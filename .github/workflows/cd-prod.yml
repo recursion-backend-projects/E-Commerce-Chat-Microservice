@@ -117,11 +117,8 @@ jobs:
             echo "PROD_RDS_PASSWORD=${{ secrets.PROD_RDS_PASSWORD }}" >> .env
             echo "PROD_RDS_HOSTNAME=${{ secrets.PROD_RDS_HOSTNAME }}" >> .env
             echo "PROD_RDS_DB_NAME=${{ secrets.PROD_RDS_DB_NAME }}" >> .env
-
-            # Goサーバー用環境ファイル作成
-            touch src/.env
-            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> src/.env
-            echo "PORT=${{ secrets.PORT }}" >> src/.env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
 
             # Docker Hubから最新のイメージをプルしてコンテナを起動する
             sudo docker compose -f compose.prod.yml up -d --pull always

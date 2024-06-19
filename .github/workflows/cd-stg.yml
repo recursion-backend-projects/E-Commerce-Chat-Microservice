@@ -115,6 +115,8 @@ jobs:
             echo "PROD_RDS_PASSWORD=${{ secrets.STG_RDS_PASSWORD }}" >> .env
             echo "PROD_RDS_HOSTNAME=${{ secrets.STG_RDS_HOSTNAME }}" >> .env
             echo "PROD_RDS_DB_NAME=${{ secrets.STG_RDS_DB_NAME }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
 
             # Docker Hubから最新のイメージをプルしてコンテナを起動する
             sudo docker compose -f compose.stg.yml up -d --pull always
