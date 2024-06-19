@@ -7,7 +7,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ./src:/E-Commerce-Chat-Microservice
+      - ./:/E-Commerce-Chat-Microservice
       - /go/pkg/mod
     ports:
       - "8080:8080"

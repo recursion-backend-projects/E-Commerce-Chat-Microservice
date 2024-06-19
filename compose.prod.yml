@@ -5,7 +5,7 @@ services:
       dockerfile: infra/prod/app/Dockerfile
     container_name: go_server
     volumes:
-      - ./src:/E-Commerce-Chat-Microservice
+      - ./:/E-Commerce-Chat-Microservice
       - /go/pkg/mod
     ports:
       - "8080:8080"
