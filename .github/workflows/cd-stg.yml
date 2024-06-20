@@ -94,7 +94,7 @@ jobs:
 
               # 未使用のイメージ、コンテナ、ネットワークを削除
               sudo docker system prune -af
-              # 未使用のボリュームを削除(ただし、再署名を避けるため、src_https_portalは削除しない)
+              # 未使用のボリュームを削除(ただし、再署名を避けるため、e-commerce-chat-microservice_https-portal-dataは削除しない)
               sudo chmod +x ./bin/cleanup_volumes.sh
               sudo ./bin/cleanup_volumes.sh
 
