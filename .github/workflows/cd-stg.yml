@@ -94,7 +94,7 @@ jobs:
 
               # 未使用のイメージ、コンテナ、ネットワークを削除
               sudo docker system prune -af
-              # 未使用のボリュームを削除(ただし、再署名を避けるため、src_https_portalは削除しない)
+              # 未使用のボリュームを削除(ただし、再署名を避けるため、e-commerce-chat-microservice_https-portal-dataは削除しない)
               sudo chmod +x ./bin/cleanup_volumes.sh
               sudo ./bin/cleanup_volumes.sh
 
@@ -115,6 +115,8 @@ jobs:
             echo "PROD_RDS_PASSWORD=${{ secrets.STG_RDS_PASSWORD }}" >> .env
             echo "PROD_RDS_HOSTNAME=${{ secrets.STG_RDS_HOSTNAME }}" >> .env
             echo "PROD_RDS_DB_NAME=${{ secrets.STG_RDS_DB_NAME }}" >> .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "PORT=${{ secrets.PORT }}" >> .env
 
             # Docker Hubから最新のイメージをプルしてコンテナを起動する
             sudo docker compose -f compose.stg.yml up -d --pull always

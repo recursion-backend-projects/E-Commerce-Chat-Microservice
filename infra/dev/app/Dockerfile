@@ -2,7 +2,7 @@
 FROM golang:1.22
 
 # 作業ディレクトリを設定
-WORKDIR /E-Commerce-Chat-Microservice
+WORKDIR /E-Commerce-Chat-Microservice/src
 
 # bashをインストール
 RUN apt-get update && apt-get install -y bash
