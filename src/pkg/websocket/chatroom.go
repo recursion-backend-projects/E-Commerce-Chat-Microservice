@@ -59,9 +59,11 @@ func RemoveClient(client *Client, connectionType string) {
 	if exists {
 		if connectionType == "create" {
 			chatRoom.customer = nil
+			chatRoom.admin.conn.Close()
 			log.Printf("Customer %d disconnected", client.customerID)
 		} else if connectionType == "join" {
 			chatRoom.admin = nil
+			chatRoom.customer.conn.Close()
 			log.Printf("Admin %d disconnected from chat room for customer %d", client.adminID, client.customerID)
 		}
 	}
